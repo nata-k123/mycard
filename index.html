@@ -145,21 +145,30 @@
         }
 
         .qr-button {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 14px);
+            left: min(calc(100vw - 60px), 368px);
+            z-index: 30;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            width: 100%;
-            min-height: 52px;
-            border: 1px solid rgba(24, 68, 48, 0.22);
-            border-radius: 16px;
-            background: rgba(255, 253, 247, 0.78);
-            color: var(--leaf-dark);
+            width: 46px;
+            height: 46px;
+            border: 1px solid rgba(255, 255, 255, 0.36);
+            border-radius: 999px;
+            background: rgba(17, 36, 28, 0.46);
+            color: rgba(255, 253, 248, 0.94);
             font: inherit;
-            font-size: 1rem;
-            font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 10px 22px rgba(44, 54, 48, 0.08);
+            box-shadow: 0 8px 20px rgba(10, 18, 14, 0.2);
+            backdrop-filter: blur(10px);
+            transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+        }
+
+        .qr-button:hover {
+            background: rgba(17, 36, 28, 0.48);
+            color: #fffdf8;
+            transform: translateY(-1px);
         }
 
         .qr-button svg {
@@ -343,12 +352,24 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (min-width: 561px) {
+            .qr-button {
+                left: calc(50% + 208px);
+            }
+        }
     </style>
 </head>
 <body>
     <main class="page">
         <section class="hero" aria-label="Natalie with dogs">
             <img src="./media/IMG_2706.jpg" alt="Natalie sitting outside with dogs">
+            <button type="button" class="qr-button" id="showQR" aria-label="Show QR code" title="QR Code">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M14 14h2v2h-2v-2Zm4 0h2v6h-6v-2h4v-4Z" fill="currentColor"/>
+                </svg>
+            </button>
             <div class="hero-content">
                 <div class="eyebrow">Emigration Oaks neighbor</div>
                 <h1>Natalie</h1>
@@ -364,14 +385,6 @@
                 </svg>
                 Text Me
             </a>
-
-            <button type="button" class="qr-button" id="showQR" aria-label="Show QR code">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M14 14h2v2h-2v-2Zm4 0h2v6h-6v-2h4v-4Z" fill="currentColor"/>
-                </svg>
-                QR Code
-            </button>
         </div>
 
         <section class="intro">
