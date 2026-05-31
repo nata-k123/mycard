@@ -230,9 +230,9 @@
         }
 
         .qr-button {
-            position: fixed;
-            top: calc(env(safe-area-inset-top, 0px) + 14px);
-            left: min(calc(100vw - 60px), 368px);
+            position: absolute;
+            top: 14px;
+            left: 328px;
             z-index: 30;
             display: flex;
             align-items: center;
@@ -438,11 +438,6 @@
             }
         }
 
-        @media (min-width: 561px) {
-            .qr-button {
-                left: calc(50% + 208px);
-            }
-        }
     </style>
 </head>
 <body>
@@ -450,13 +445,13 @@
         <section class="hero" aria-label="Natalie with dogs">
             <div class="hero-photo" id="heroPhoto">
                 <img src="./media/IMG_2706.jpg" alt="Natalie sitting outside with dogs" fetchpriority="high" decoding="async">
+                <button type="button" class="qr-button" id="showQR" aria-label="Show QR code" title="QR Code">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M14 14h2v2h-2v-2Zm4 0h2v6h-6v-2h4v-4Z" fill="currentColor"/>
+                    </svg>
+                </button>
             </div>
-            <button type="button" class="qr-button" id="showQR" aria-label="Show QR code" title="QR Code">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M14 14h2v2h-2v-2Zm4 0h2v6h-6v-2h4v-4Z" fill="currentColor"/>
-                </svg>
-            </button>
             <div class="hero-content">
                 <div class="eyebrow">Emigration Oaks neighbor</div>
                 <h1>Natalie</h1>
