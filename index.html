@@ -76,6 +76,8 @@
             position: relative;
             z-index: 1;
             padding: 24px 24px 28px;
+            overflow: hidden;
+            border-radius: 0 0 34px 34px;
             color: #fffdf8;
             background: linear-gradient(135deg, rgba(24, 68, 48, 0.98), rgba(17, 36, 28, 0.98));
         }
@@ -112,6 +114,8 @@
         }
 
         .cta {
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -125,12 +129,42 @@
             font-size: 1.08rem;
             font-weight: 800;
             box-shadow: 0 16px 28px rgba(24, 68, 48, 0.28);
-            transition: transform 0.18s ease, box-shadow 0.18s ease;
+            transform: translateZ(0);
+            transition: box-shadow 0.18s ease, filter 0.18s ease;
+        }
+
+        .cta::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.18) 42%, transparent 64%);
+            transform: translateX(-120%);
+            transition: transform 0.45s ease;
+        }
+
+        .cta span,
+        .cta svg {
+            position: relative;
+            z-index: 1;
         }
 
         .cta:hover {
-            transform: translateY(-2px);
             box-shadow: 0 20px 34px rgba(24, 68, 48, 0.34);
+            filter: saturate(1.08);
+        }
+
+        .cta:hover::before {
+            transform: translateX(120%);
+        }
+
+        .cta:active {
+            box-shadow: 0 10px 22px rgba(24, 68, 48, 0.26);
+            filter: brightness(0.96);
+        }
+
+        .cta:focus-visible {
+            outline: 3px solid rgba(240, 184, 79, 0.72);
+            outline-offset: 4px;
         }
 
         .cta svg {
@@ -383,7 +417,7 @@
                     <path d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v6A2.5 2.5 0 0 1 16.5 15H10l-5 4v-12.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
                     <path d="M8 8h8M8 11h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                Text Me
+                <span>Text Me</span>
             </a>
         </div>
 
