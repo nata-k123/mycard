@@ -60,12 +60,63 @@
             background: #203428;
         }
 
+        .hero-photo {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(217, 226, 210, 0.92), rgba(196, 214, 197, 0.92)),
+                url("./media/IMG_2706.jpg") center / cover;
+        }
+
+        .hero-photo::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            filter: blur(22px) saturate(1.08);
+            transform: scale(1.08);
+            opacity: 1;
+            transition: opacity 0.7s ease;
+        }
+
+        .hero-photo::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.28) 42%, transparent 70%);
+            transform: translateX(-120%);
+            animation: heroLoadingSweep 1.45s ease-in-out infinite;
+            opacity: 0.8;
+        }
+
+        .hero-photo.is-loaded::before,
+        .hero-photo.is-loaded::after {
+            opacity: 0;
+            animation: none;
+        }
+
+        @keyframes heroLoadingSweep {
+            to {
+                transform: translateX(120%);
+            }
+        }
+
         .hero img {
             display: block;
             position: relative;
+            z-index: 1;
             width: 100%;
-            height: auto;
+            height: 100%;
             object-fit: contain;
+            opacity: 0;
+            transform: scale(1.012);
+            transition: opacity 0.65s ease, transform 0.9s ease;
+        }
+
+        .hero-photo.is-loaded img {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .hero::after {
@@ -397,7 +448,9 @@
 <body>
     <main class="page">
         <section class="hero" aria-label="Natalie with dogs">
-            <img src="./media/IMG_2706.jpg" alt="Natalie sitting outside with dogs">
+            <div class="hero-photo" id="heroPhoto">
+                <img src="./media/IMG_2706.jpg" alt="Natalie sitting outside with dogs" fetchpriority="high" decoding="async">
+            </div>
             <button type="button" class="qr-button" id="showQR" aria-label="Show QR code" title="QR Code">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
@@ -479,6 +532,8 @@
         const showQR = document.getElementById("showQR");
         const closeQR = document.getElementById("closeQR");
         const qr = document.getElementById("qr");
+        const heroPhoto = document.getElementById("heroPhoto");
+        const heroImage = heroPhoto && heroPhoto.querySelector("img");
 
         function openQR() {
             qrModal.classList.add("is-open");
@@ -501,6 +556,15 @@
                 }).svg();
             }
         });
+
+        if (heroImage) {
+            if (heroImage.complete) {
+                heroPhoto.classList.add("is-loaded");
+            } else {
+                heroImage.addEventListener("load", () => heroPhoto.classList.add("is-loaded"), { once: true });
+                heroImage.addEventListener("error", () => heroPhoto.classList.add("is-loaded"), { once: true });
+            }
+        }
 
         showQR.addEventListener("click", openQR);
         closeQR.addEventListener("click", closeQRModal);
