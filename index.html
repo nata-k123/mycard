@@ -138,6 +138,102 @@
             height: 24px;
         }
 
+        .quick-actions {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .qr-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            min-height: 52px;
+            border: 1px solid rgba(24, 68, 48, 0.22);
+            border-radius: 16px;
+            background: rgba(255, 253, 247, 0.78);
+            color: var(--leaf-dark);
+            font: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 22px rgba(44, 54, 48, 0.08);
+        }
+
+        .qr-button svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .qr-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(10, 18, 14, 0.62);
+            backdrop-filter: blur(10px);
+        }
+
+        .qr-modal.is-open {
+            display: flex;
+        }
+
+        .qr-panel {
+            width: min(100%, 360px);
+            padding: 22px;
+            border-radius: 24px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .qr-panel h2 {
+            margin: 0 0 8px;
+            font-family: "Fraunces", serif;
+            font-size: 1.65rem;
+            line-height: 1;
+        }
+
+        .qr-panel p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        #qr {
+            display: grid;
+            place-items: center;
+            width: min(100%, 240px);
+            margin: 20px auto;
+            padding: 18px;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: inset 0 0 0 1px rgba(24, 35, 31, 0.08);
+        }
+
+        #qr svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .modal-close {
+            width: 100%;
+            min-height: 48px;
+            border: 0;
+            border-radius: 14px;
+            background: var(--leaf-dark);
+            color: white;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
         .intro {
             padding: 22px;
             border: 1px solid var(--line);
@@ -266,13 +362,23 @@
             </div>
         </section>
 
-        <a href="sms:+1(385)436-8522" class="cta" aria-label="Text Me">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v6A2.5 2.5 0 0 1 16.5 15H10l-5 4v-12.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                <path d="M8 8h8M8 11h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Text Me
-        </a>
+        <div class="quick-actions">
+            <a href="sms:+1(385)436-8522" class="cta" aria-label="Text Me">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v6A2.5 2.5 0 0 1 16.5 15H10l-5 4v-12.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M8 8h8M8 11h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Text Me
+            </a>
+
+            <button type="button" class="qr-button" id="showQR" aria-label="Show QR code">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M14 14h2v2h-2v-2Zm4 0h2v6h-6v-2h4v-4Z" fill="currentColor"/>
+                </svg>
+                QR Code
+            </button>
+        </div>
 
         <section class="intro">
             <h2>Hello, neighbors!</h2>
@@ -317,6 +423,53 @@
         </section>
     </main>
 
+    <div class="qr-modal" id="qrModal" aria-hidden="true" role="dialog" aria-labelledby="qrTitle">
+        <div class="qr-panel">
+            <h2 id="qrTitle">Scan to share</h2>
+            <p>Open this card on another phone.</p>
+            <div id="qr"></div>
+            <button type="button" class="modal-close" id="closeQR">Close</button>
+        </div>
+    </div>
+
+    <script src="./qrcode.min.js"></script>
+    <script>
+        const qrModal = document.getElementById("qrModal");
+        const showQR = document.getElementById("showQR");
+        const closeQR = document.getElementById("closeQR");
+        const qr = document.getElementById("qr");
+
+        function openQR() {
+            qrModal.classList.add("is-open");
+            qrModal.setAttribute("aria-hidden", "false");
+        }
+
+        function closeQRModal() {
+            qrModal.classList.remove("is-open");
+            qrModal.setAttribute("aria-hidden", "true");
+        }
+
+        window.addEventListener("load", () => {
+            if (window.QRCode && qr) {
+                qr.innerHTML = new QRCode({
+                    content: window.location.href,
+                    container: "svg-viewbox",
+                    join: true,
+                    ecl: "L",
+                    padding: 0
+                }).svg();
+            }
+        });
+
+        showQR.addEventListener("click", openQR);
+        closeQR.addEventListener("click", closeQRModal);
+        qrModal.addEventListener("click", (event) => {
+            if (event.target === qrModal) closeQRModal();
+        });
+        window.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeQRModal();
+        });
+    </script>
     <script data-goatcounter="https://nataliek.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
