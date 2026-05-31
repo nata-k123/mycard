@@ -227,6 +227,9 @@
             display: grid;
             gap: 10px;
             margin-bottom: 18px;
+            transform: translateY(var(--text-slide, 0px));
+            transition: transform 0.12s linear;
+            will-change: transform;
         }
 
         .qr-button {
@@ -529,6 +532,8 @@
         const qr = document.getElementById("qr");
         const heroPhoto = document.getElementById("heroPhoto");
         const heroImage = heroPhoto && heroPhoto.querySelector("img");
+        const quickActions = document.querySelector(".quick-actions");
+        let textMotionFrame = 0;
 
         function openQR() {
             qrModal.classList.add("is-open");
@@ -550,7 +555,22 @@
                     padding: 0
                 }).svg();
             }
+            updateTextMotion();
         });
+
+        function updateTextMotion() {
+            if (!quickActions) return;
+            const slide = Math.max(-16, Math.min(10, 10 - window.scrollY * 0.08));
+            quickActions.style.setProperty("--text-slide", `${slide}px`);
+        }
+
+        window.addEventListener("scroll", () => {
+            if (textMotionFrame) return;
+            textMotionFrame = window.requestAnimationFrame(() => {
+                updateTextMotion();
+                textMotionFrame = 0;
+            });
+        }, { passive: true });
 
         if (heroImage) {
             if (heroImage.complete) {
