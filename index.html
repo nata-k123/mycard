@@ -224,9 +224,18 @@
         }
 
         .quick-actions {
+            position: sticky;
+            top: calc(env(safe-area-inset-top, 0px) + 12px);
+            z-index: 20;
             display: grid;
             gap: 10px;
             margin-bottom: 18px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.58);
+            border-radius: 24px;
+            background: rgba(246, 248, 244, 0.72);
+            box-shadow: 0 18px 42px rgba(22, 37, 28, 0.12);
+            backdrop-filter: blur(18px) saturate(1.18);
             transform: translateY(var(--text-slide, 0px));
             transition: transform 0.12s linear;
             will-change: transform;
@@ -235,7 +244,7 @@
         .qr-button {
             position: absolute;
             top: 14px;
-            left: 328px;
+            right: 14px;
             z-index: 30;
             display: flex;
             align-items: center;
